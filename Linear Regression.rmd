@@ -1,0 +1,482 @@
+---
+title: "Linear Regression"
+author: "SOFTANBEES TECHNOLOGIES PVT. LTD."
+date: "8/14/2020"
+output: 
+ html_document:
+    toc: true
+    toc_float: true
+---
+
+___________________________________________________________________________________________________________________
+
+#  **Basic Idea About Linear Regression**
+___________________________________________________________________________________________________________________
+
+To Use the Library you need for the analysis, run this code (you only need to do this once):
+\
+
+ **LIBRARY**
+\
+```{r echo=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+library(ggplot2)
+library(dplyr)
+library(broom)
+library(ggpubr)
+
+```
+
+
+ **What is Linear Regression?**
+\
+\
+**Linear regression** is a regression model that uses a straight line to describe the relationship between variables. It finds the line of best fit through your data by searching for the value of the regression coefficient(s) that minimizes the total error of the model.
+\
+mathematical equation can be generalised as follows- 
+$$
+\begin{align}
+y=mx+c
+\end{align}\
+$$
+
+There are two main types of linear regression:
+
+- **Simple linear regression** uses only one independent variable
+- **Multiple linear regression** uses two or more independent variables
+\
+\
+**Simple linear regression**
+\
+The first dataset contains observations about income (in a range of $15k to $75k) and happiness (rated on a scale of 1 to 10) in an imaginary sample of 500 people. The income values are divided by 10,000 to make the income data match the scale of the happiness scores (so a value of $2 represents $20,000, $3 is $30,000, etc.)
+\
+\
+**Multiple linear regression**
+\
+The second dataset contains observations on the percentage of people biking to work each day, the percentage of people smoking, and the percentage of people with heart disease in an imaginary sample of 500 towns.
+\
+
+\
+$$
+\begin{align}
+Y=a+b1X1+b2X2+b3X3+….+bnXn+u
+\end{align}\
+$$
+\
+\
+
+
+\
+**Why we need to linear Regression**
+\
+
+ Regression analysis refers to a method of mathematically sorting out which variables may have an impact. The importance of regression  analysis for a small business is that it helps determine which factors matter most, which it can ignore, and how those factors interact with each other.
+\
+\
+\
+**When should we use linear regression?**
+\
+
+Use Regression to Analyze a Wide Variety of Relationships
+
+Model multiple independent variables. Include continuous and categorical variables. Use polynomial terms to model curvature. Assess interaction terms to determine whether the effect of one independent variable depends on the value of another variable.
+\
+\
+
+**What are the advantages of linear regression?**
+\
+
+The biggest advantage of linear regression models is linearity: It makes the estimation procedure simple and, most importantly, these linear equations have an easy to understand interpretation on a modular level
+\
+\
+\
+**What is the difference between linear and nonlinear regression?**
+\
+
+A linear regression equation simply sums the terms. While the model must be linear in the parameters, you can raise an independent variable by an exponent to fit a curve. For instance, you can include a squared or cubed term. Nonlinear regression models are anything that doesn't follow this one form.
+\
+\
+\
+**What are the limitations of linear regression?**
+\
+
+Main limitation of Linear Regression is the assumption of linearity between the dependent variable and the independent variables. In the real world, the data is rarely linearly separable. It assumes that there is a straight-line relationship between the dependent and independent variables which is incorrect many times.
+\
+\
+\
+**How do you know if it is linear or nonlinear?**
+\
+
+Simplify the equation as closely as possible to the form of -
+$$
+\begin{align}
+Y=a+bX+u
+\end{align}\
+$$
+
+Where - 
+
+**Y = dependent variable(the variable that you are trying to predict )**\
+
+**X = independent variable(the variable that you are using to predict Y )**\
+
+**a = the intercept.**\
+
+**b = the slope.**\
+
+**u = the regression residual.**\
+
+
+
+\
+
+
+Check to see if your equation has exponents. If it has exponents, it is nonlinear. If your equation has no exponents, it is linear.
+\
+\
+\
+**How do you know if data is linear?**
+\
+
+You can tell if a table is linear by looking at how X and Y change. If, as X increases by 1, Y increases by a constant rate, then a table is linear.
+\
+\
+**How is linear regression used in real life?**
+\
+
+In real life scenarios there are multiple advertising campaigns that run during the same time period. Supposing two campaigns are run on TV and Radio in parallel, a linear regression can capture the isolated as well as the combined impact of running this ads together.
+\
+\
+\
+**What is an example of regression problem?**
+\
+
+These are often quantities, such as amounts and sizes. For example, a house may be predicted to sell for a specific dollar value, perhaps in the range of $100,000 to $200,000. A regression problem requires the prediction of a quantity.
+\
+\
+\
+
+
+<h1> **Example Problem **</h1>
+_______________________________________________________________________________________________________________________
+
+For this analysis, we will use the cars dataset that comes with R by default.
+\
+cars is a standard built-in dataset, that makes it convenient to show linear regression in a simple and easy to understand fashion.
+\
+You can access this dataset by typing in cars in your R console.
+\
+You will find that it consists of 50 observations(rows) and 2 variables (columns) � dist and speed. Lets print out the first six observations here.
+\
+```{r}
+head(cars)  # display the first 6 observations  
+```
+The goal here is to establish a mathematical equation for dist as a function of speed, so you can use it to predict dist when only the speed of the car is known.
+
+So it is desirable to build a linear regression model with the response variable as dist and the predictor as speed.
+
+Before we begin building the regression model, it is a good practice to analyse and understand the variables.
+
+The graphical analysis and correlation study below will help with this.
+
+
+
+<h1> **Graphical Analysis **</h1>
+_______________________________________________________________________________________________________________________
+
+The aim of this exercise is to build a simple regression model that you can use to predict Distance (dist).
+
+This is possible by establishing a mathematical formula between Distance (dist) and Speed (speed).
+
+But before jumping in to the syntax, lets try to understand these variables graphically.
+
+Typically, for each of the predictors, the following plots help visualise the patterns:
+
+- **Scatter plot:** Visualise the linear relationship between the predictor and response
+
+- **Box plot:** To spot any outlier observations in the variable. Having outliers in your predictor can drastically affect the predictions as they can affect the direction/slope of the line of best fit.
+
+- **Density plot:**To see the distribution of the predictor variable. Ideally, a close to normal distribution (a bell shaped curve), without being skewed to the left or right is preferred.
+Let us see how to make each one of them.
+\
+\
+\
+
+
+**Using Scatter Plot To Visualise The Relationship **
+
+Scatter plots can help visualise linear relationships between the response and predictor variables.
+
+Ideally, if you have many predictor variables, a scatter plot is drawn for each one of them against the response, along with the line of best fit as seen below.
+
+```{r}
+scatter.smooth(x=cars$speed, y=cars$dist, main="Dist ~ Speed")  # scatterplot
+```
+
+
+
+he scatter plot along with the smoothing line above suggests a linear and positive relationship between the **dist** and **speed**.
+
+This is a good thing.
+
+Because, one of the underlying assumptions of linear regression is, the relationship between the response and predictor variables is linear and additive.
+
+\
+\
+\
+**Using BoxPlot To Check For Outliers **
+\
+
+Generally, an outlier is any datapoint that lies outside the 1.5 * inter quartile range (IQR).
+
+IQR is calculated as the distance between the 25th percentile and 75th percentile values for that variable.
+
+```{r}
+par(mfrow=c(1, 2))  # divide graph area in 2 columns
+
+boxplot(cars$speed, main="Speed", sub=paste("Outlier rows: ", boxplot.stats(cars$speed)$out))  # box plot for 'speed'
+
+boxplot(cars$dist, main="Distance", sub=paste("Outlier rows: ", boxplot.stats(cars$dist)$out))  # box plot for 'distance'
+```
+
+\
+\
+**Using Density Plot To Check If Response Variable Is Close To Normal**
+\
+
+```{r}
+library(e1071)  # for skewness function
+par(mfrow=c(1, 2))  # divide graph area in 2 columns
+
+plot(density(cars$speed), main="Density Plot: Speed", ylab="Frequency", sub=paste("Skewness:", round(e1071::skewness(cars$speed), 2))) 
+
+# density plot for 'speed'
+
+polygon(density(cars$speed), col="red")
+
+plot(density(cars$dist), main="Density Plot: Distance", ylab="Frequency", sub=paste("Skewness:", round(e1071::skewness(cars$dist), 2))) 
+
+# density plot for 'dist'
+
+polygon(density(cars$dist), col="red")
+```
+
+\
+
+
+**What is Skewness**
+\
+ Skewness is the measure of the asymmetry of an ideally symmetric probability distribution and is given by the third standardized moment. If that sounds way too complex, don’t worry! Let me break it down for you.
+
+In simple words, skewness is the measure of how much the probability distribution of a random variable deviates from the normal distribution. Now, you might be thinking – why am I talking about normal distribution here?
+
+Well, the normal distribution is the probability distribution without any skewness. You can look at the image below which shows symmetrical distribution that’s basically a normal distribution and you can see that it is symmetrical on both sides of the dashed line. Apart from this, there are two types of skewness:
+
+- **Positive Skewness**
+- **Negative Skewness**
+
+
+
+
+
+**Problem**
+Find the skewness of eruption duration in the data set faithful.
+
+Solution
+We apply the function skewness from the e1071 package to compute the skewness coefficient of eruptions. As the package is not in the core R library, it has to be installed and loaded into the R workspace.
+
+
+```{r}
+ library(e1071)                    # load e1071 
+ duration = faithful$eruptions     # eruption durations 
+ skewness(duration)                # apply the skewness function 
+```
+
+Answer
+The skewness of eruption duration is -0.41355. It indicates that the eruption duration distribution is skewed towards the left.
+
+
+
+
+
+**What is Density**
+
+\
+For example - You designed or prediction that todays rain 
+
+
+
+
+**Now I think we need to know about ggplot**
+\
+
+- ggplot2 is a R package dedicated to data visualization. It can greatly improve the quality and aesthetics of your graphics, and will make you much more efficient in creating them. 
+\
+- ggplot2 allows to build almost any type of chart. The R graph
+gallery focuses on it so almost every section there starts with ggplot2 examples.
+\
+- ggplot2 is a R package dedicated to data visualization. It can greatly improve the quality and aesthetics of your graphics, and will make you much more efficient in creating them. ggplot2 allows to build almost any type of chart. The R graph.
+\
+\
+\
+
+<h1>**Linear Regression MODEL**</h1>
+\
+A linear regression can be calculated in R with the command lm. In the next example, use this command to calculate the height based on the age of the child.
+
+  First, import the library readxl to read Microsoft Excel files, it can be any kind of format, as long R can read it.
+
+\
+With the command summary(lmHeight) you can see detailed information on the model’s performance and coefficients.
+\
+
+```{r}
+library(readxl)
+ageandheight <- read_excel("ageandheight.xls", sheet = "Hoja2") #Upload the data
+lmHeight = lm(height~age, data = ageandheight) #Create the linear regression
+summary(lmHeight) #Review the results
+```
+
+
+**Coefficients**
+\
+
+You can see the values of the intercept (“a” value) and the slope (“b” value) for the age. These “a” and “b” values plot a line between all the points of the data. So in this case, if there is a child that is 20.5 months old, a is 64.92 and b is 0.635, the model predicts (on average) that its height in centimeters is around 64.92 + (0.635 * 20.5) = 77.93 cm.
+
+When a regression takes into account two or more predictors to create the linear regression, it’s called multiple linear regression. By the same logic you used in the simple example before, the height of the child is going to be measured by:
+
+$$
+\begin{align}
+H=a+Age*b1+(Number of siblings) * b2
+\end{align}\
+$$
+\
+**Where H = Height **\
+**a and b is intercept**\
+\
+You are now looking at the height as a function of the age in months and the number of siblings the child has. In the image above, the red rectangle indicates the coefficients (b1 and b2). You can interpret these coefficients in the following way:
+
+" When comparing children with the same number of siblings, the average predicted height increases in 0.63 cm for every month the child has. The same way, when comparing children with the same age, the height decreases (because the coefficient is negative) in -0.01 cm for each increase in the number of siblings."
+\
+
+In R, to add another coefficient, add the symbol "+" for every additional variable you want to add to the model.
+\
+```{r}
+lmHeight2 = lm(height~age + no_siblings, data = ageandheight) #Create a linear regression with two variables
+summary(lmHeight2) #Review the results
+```
+
+\
+\
+\
+**Residuals**
+\
+\
+A good way to test the quality of the fit of the model is to look at the residuals or the differences between the real values and the predicted values. The straight line in the image above represents the predicted values. The red vertical line from the straight line to the observed data value is the residual.
+
+The idea in here is that the sum of the residuals is approximately zero or as low as possible. In real life, most cases will not follow a perfectly straight line, so residuals are expected. In the R summary of the lm function, you can see descriptive statistics about the residuals of the model, following the same example, the red square shows how the residuals are approximately zero.
+
+
+```{r}
+lm(formula = height ~ age, data = ageandheight)
+```
+
+
+\
+**How to test if your linear model has a good fit? **
+\
+One measure very used to test how good is your model is the coefficient of determination or R². This measure is defined by the proportion of the total variability explained by the regression model.
+
+
+This can seem a little bit complicated, but in general, for models that fit the data well, R² is near 1. Models that poorly fit the data have R² near 0. In the examples below, the first one has an R² of 0.02; this means that the model explains only 2% of the data variability. The second one has an R² of 0.99, and the model can explain 99% of the total variability.
+\
+
+
+
+```{r}
+lm(formula = height ~ age + no_siblings, data = ageandheight)
+```
+\
+**Don’t forget to look at the residuals!**
+\
+You can have a pretty good R² in your model, but let’s not rush to conclusions here. Let’s see an example. You are going to predict the pressure of a material in a laboratory based on its temperature.
+\
+Let’s plot the data (in a simple scatterplot) and add the line you built with your linear model. 
+\
+
+```{r}
+pressure <- read_excel("pressure.xlsx") #Upload the data
+lmTemp = lm(Pressure~Temperature, data = pressure) #Create the linear regression
+plot(pressure, pch = 16, col = "blue") #Plot the results
+abline(lmTemp) #Add a regression line
+```
+
+
+\
+If you see the summary of your new model, you can see that it has pretty good results (look at the R²and the adjusted R²)
+\
+```{r}
+summary(lmTemp)
+
+```
+
+\
+when you plot the residuals, they should look random. Otherwise means that maybe there is a hidden pattern that the linear model is not considering. To plot the residuals, use the command plot(lmTemp$residuals)
+\
+```{r}
+plot(lmTemp$residuals, pch = 16, col = "red")
+
+```
+
+\
+This can be a problem. If you have more data, your simple linear model will not be able to generalize well. In the previous picture, notice that there is a pattern (like a curve on the residuals). This is not random at all.
+\
+
+
+Let’s try with a quadratic term. For this, add the term “I” (capital "I") before your transformation, for example, this will be the normal linear regression formula:
+\
+```{r}
+lmTemp2 = lm(Pressure~Temperature + I(Temperature^2), data = pressure) #Create a linear regression with a quadratic coefficient
+summary(lmTemp2) #Review the results
+```
+\
+Please, Notice that the model improved significantly. If you plot the residuals of the new model, they will look like this:
+```{r}
+plot(lmTemp2$residuals, pch = 16, col = "red")
+
+```
+
+
+**Detect Influential Points**
+\
+You can detect influential points by looking at the object containing the linear model, using the function cooks.distance and then plot these distances. Change a value on purpose to see how it looks on the Cooks Distance plot. 
+\
+To change a specific value, you can directly point at it with ageandheight[row number, column number] = [new value]. In this case, the height is changed to 7.7 of the second example:
+\
+```{r}
+ageandheight[2, 2] = 7.7
+head(ageandheight)
+```
+\
+You create again the model and see how the summary is giving a bad fit, and then plot the Cooks Distances. For this, after creating the linear regression, use the command cooks.distance([linear model] and then if you want you can plot these distances with the command plot.
+\
+```{r}
+lmHeight3 = lm(height~age, data = ageandheight)#Create the linear regression
+summary(lmHeight3)#Review the results
+plot(cooks.distance(lmHeight3), pch = 16, col = "blue") #Plot the Cooks Distances.
+```
+
+Notice that there is a point that does not follow the pattern, and it might be affecting the model. Here you can make decisions on this point, in general, there are three reasons why a point is so influential:
+
+1. Someone made a recording error
+\
+2. Someone made a fundamental mistake collecting the observation
+\
+3. The data point is perfectly valid, in which case the model cannot account for the behavior.
+\
+
+
+If the case is 1 or 2, then you can remove the point (or correct it). If it's 3, it's not worthy to delete a valid point; maybe you can try on a non-linear model rather than a linear model like linear regression.
+
+
+
+
